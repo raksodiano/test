@@ -77,6 +77,10 @@ class WalletController extends AbstractController
             return new JsonResponse([
                 'message' => 'Debe ingresar un valor'
             ], Response::HTTP_NOT_ACCEPTABLE);
+        } elseif (empty($email)) {
+            return new JsonResponse([
+                'message' => 'Email Vacio'
+            ], Response::HTTP_NOT_ACCEPTABLE);
         }
 
         $wallet_id = $this->userRepository->validateEmail($email);
@@ -114,6 +118,10 @@ class WalletController extends AbstractController
             return new JsonResponse([
                 'message' => 'Debe ingresar el codigo'
             ], Response::HTTP_NOT_ACCEPTABLE);
+        } elseif (empty($email)) {
+            return new JsonResponse([
+                'message' => 'Email Vacio'
+            ], Response::HTTP_NOT_ACCEPTABLE);
         }
 
         $wallet = $this->userRepository->validateWallet($email);
@@ -142,6 +150,26 @@ class WalletController extends AbstractController
 
         return new JsonResponse([
             'message' => 'Confirmacion de pago hecha correctamente!',
+        ], Response::HTTP_OK);
+
+    }
+
+    public function checkBalanceAction(Request $request)
+    {
+        $data = json_decode($request->getContent(), true);
+        
+        $email = $data['email'];
+
+        if (empty($email)) {
+            return new JsonResponse([
+                'message' => 'Email Vacio'
+            ], Response::HTTP_NOT_ACCEPTABLE);
+        }
+
+        $wallet = $this->userRepository->validateWallet($email);
+
+        return new JsonResponse([
+            'message' => $wallet,
         ], Response::HTTP_OK);
 
     }

@@ -27,3 +27,9 @@ confirm_payment_wallet:
   path: /api/confirm_payment
   controller: App\Controller\WalletController::confirmPaymentAction
   methods: [POST]
+
+check_balance_wallet:
+  path: /api/check_balance
+  controller: App\Controller\WalletController::checkBalanceAction
+  methods: [POST]
+  
