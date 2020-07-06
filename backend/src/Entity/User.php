@@ -51,9 +51,15 @@ class User implements UserInterface
      */
     private $movements;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Token::class, mappedBy="user")
+     */
+    private $token;
+
     public function __construct()
     {
         $this->movements = new ArrayCollection();
+        $this->tokens = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -164,6 +170,7 @@ class User implements UserInterface
 
         return $this;
     }
+
     /**
      * @return Collection|Movement[]
      */
@@ -194,4 +201,13 @@ class User implements UserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection|Token[]
+     */
+    public function getTokens(): Collection
+    {
+        return $this->tokens;
+    }
+
 }

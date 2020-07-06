@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Wallet;
 use App\Entity\Movement;
+use App\Entity\Token;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
@@ -46,5 +47,80 @@ class WalletRepository extends ServiceEntityRepository
 
     }
 
+    public function validateBalance($amount, $wallet_id)
+    {
+        $wallet = $this->find($wallet_id);
+        $balance = $wallet->getAmount();
+
+        return ($balance < $amount) ? true : false;
+    }
+
+    public function payment($amount, $wallet_id, $key)
+    {
+        $date = new \Datetime();
+        $date = new \DateTime($date->format('Y-m-d H:i:s'));
+
+        $wallet = $this->find($wallet_id);
+        // $balance = $wallet->getAmount();
+        // $wallet
+        //     ->setAmount(($balance - $amount))
+        //     ->setUpdatedAt($date);
+
+        $user = $wallet->getUser();
+
+        // $new_movement = new Movement;
+        // $new_movement
+        //     ->setAmount($amount)
+        //     ->setType(false)
+        //     ->setCreatedAt($date)
+        //     ->setUser($user);
+
+        $new_token = new Token;
+        $new_token
+            ->setToken($key)
+            ->setAmount($amount)
+            ->setStatus(true)
+            ->setExpired(false)
+            ->setCreatedAt($date)
+            ->setUser($user);
+
+        $this->manager->persist($new_token);
+        $this->manager->flush();
+
+    }
+
+    public function discountBalance($wallet_id, $key)
+    {
+        $date = new \Datetime();
+        $date = new \DateTime($date->format('Y-m-d H:i:s'));
+
+        $wallet = $this->find($wallet_id);
+        $balance = $wallet->getAmount();
+        $wallet
+            ->setAmount(($balance - $amount))
+            ->setUpdatedAt($date);
+
+        $user = $wallet->getUser();
+
+        $new_movement = new Movement;
+        $new_movement
+            ->setAmount($amount)
+            ->setType(false)
+            ->setCreatedAt($date)
+            ->setUser($user);
+
+        $new_token = $this->findOneBy(['token' => $key, 'status' => true,]);
+        $new_token
+            ->setToken($key)
+            ->setAmount($amount)
+            ->setStatus(true)
+            ->setExpired(false)
+            ->setCreatedAt($date)
+            ->setUser($user);
+
+        $this->manager->persist($new_token);
+        $this->manager->flush();
+
+    }
 
 }

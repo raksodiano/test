@@ -20,3 +20,8 @@ recharge_wallet:
   path: /api/recharge_wallet
   controller: App\Controller\WalletController::rechargeWalletAction
   methods: [POST]
+
+payment_wallet:
+  path: /api/payment
+  controller: App\Controller\WalletController::paymentAction
+  methods: [POST]

@@ -42,6 +42,9 @@ class WalletController extends AbstractController
             $message = 'Debe ingresar el numero de telefono';
         } elseif (empty($amount)) {
             $message = 'Debe ingresar un valor';
+        } else {
+            $message = 'Regarga hecha con exito!';
+            $code = Response::HTTP_OK;
         }
 
         $exists = $this->profileRepository->existProfile($phone, $dni);
@@ -55,7 +58,41 @@ class WalletController extends AbstractController
         $this->walletRepository->rechargeWallet($amount, $exists['wallet_id']);
 
         return new JsonResponse([
-            'message' => 'Regarga hecha con exito!',
+            'message' => $message,
+        ], $code);
+    }
+
+    public function paymentAction(Request $request)
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $amount = $data['amount'];
+        $wallet_id = $data['wallet_id'];
+
+        if (empty($amount)) {
+            return new JsonResponse([
+                'message' => 'Debe ingresar un valor'
+            ], Response::HTTP_NOT_ACCEPTABLE);
+        }
+
+        $balance = $this->walletRepository->validateBalance($amount, $wallet_id);
+
+        if ($balance) {
+            return new JsonResponse([
+                    'message' => 'No cuenta con suficiente balance'
+                ], Response::HTTP_NOT_ACCEPTABLE);
+        }
+
+        $key = '';
+        $pattern = '1234567890abcdefghijklmnopqrstuvwxyz';
+        $max = strlen($pattern)-1;
+        for($i=0;$i < 6 ;$i++) $key .= $pattern{mt_rand(0,$max)};
+
+        $payment = $this->walletRepository->payment($amount, $wallet_id, $key);
+
+        return new JsonResponse([
+            'message' => 'Ingrese el siguiente codigo para confirmar el pago, codigo: ' . $key,
         ], Response::HTTP_OK);
+
     }
 }
