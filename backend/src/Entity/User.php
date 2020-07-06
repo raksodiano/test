@@ -52,7 +52,7 @@ class User implements UserInterface
     private $movements;
 
     /**
-     * @ORM\OneToMany(targetEntity=Token::class, mappedBy="user")
+     * @ORM\OneToOne(targetEntity=Token::class, mappedBy="user")
      */
     private $token;
 
@@ -202,12 +202,22 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|Token[]
-     */
-    public function getTokens(): Collection
+    public function getToken(): ?Token
     {
-        return $this->tokens;
+        return $this->token;
+    }
+
+    public function setToken(?Token $token): self
+    {
+        $this->token = $token;
+
+        // set (or unset) the owning side of the relation if necessary
+        $newUser = null === $token ? null : $this;
+        if ($token->getUser() !== $newUser) {
+            $token->setUser($newUser);
+        }
+
+        return $this;
     }
 
 }

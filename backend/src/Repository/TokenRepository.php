@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Token;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @method Token|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,10 +15,25 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class TokenRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $manager)
     {
         parent::__construct($registry, Token::class);
+        $this->manager = $manager;
     }
+
+    public function updatedToken($token_id)
+    {
+        $date = new \Datetime();
+        $date = new \DateTime($date->format('Y-m-d H:i:s'));
+
+        $token = $this->find($token_id);
+        
+        $token->setStatus(false);
+
+        $this->manager->flush();
+
+    }
+
 
     // /**
     //  * @return Token[] Returns an array of Token objects

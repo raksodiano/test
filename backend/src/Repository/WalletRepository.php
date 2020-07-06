@@ -61,30 +61,53 @@ class WalletRepository extends ServiceEntityRepository
         $date = new \DateTime($date->format('Y-m-d H:i:s'));
 
         $wallet = $this->find($wallet_id);
-        // $balance = $wallet->getAmount();
-        // $wallet
-        //     ->setAmount(($balance - $amount))
-        //     ->setUpdatedAt($date);
 
         $user = $wallet->getUser();
+        $token = $user->getToken();
+        
+        if (empty($token)) {
+            $new_token = new Token;
+            $new_token
+                ->setToken($key)
+                ->setAmount($amount)
+                ->setStatus(true)
+                ->setExpired(false)
+                ->setCreatedAt($date)
+                ->setUser($user);
+    
+            $this->manager->persist($new_token);
+            $this->manager->flush();
+        } else {
+            $token
+                ->setToken($key)
+                ->setAmount($amount)
+                ->setStatus(true)
+                ->setExpired(false)
+                ->setCreatedAt($date)
+                ->setUser($user);
 
-        // $new_movement = new Movement;
-        // $new_movement
-        //     ->setAmount($amount)
-        //     ->setType(false)
-        //     ->setCreatedAt($date)
-        //     ->setUser($user);
+            $this->manager->flush();
+        }
+        
+    }
 
-        $new_token = new Token;
-        $new_token
-            ->setToken($key)
+    public function paymentConfirm($amount, $wallet_id, $key)
+    {
+        $date = new \Datetime();
+        $date = new \DateTime($date->format('Y-m-d H:i:s'));
+
+        $wallet = $this->find($wallet_id);
+        $wallet->setAmount($wallet->getAmount() - $amount);
+        $user = $wallet->getUser();
+
+        $new_movement = new Movement;
+        $new_movement
             ->setAmount($amount)
-            ->setStatus(true)
-            ->setExpired(false)
+            ->setType(false)
             ->setCreatedAt($date)
             ->setUser($user);
 
-        $this->manager->persist($new_token);
+        $this->manager->persist($new_movement);
         $this->manager->flush();
 
     }

@@ -33,7 +33,7 @@ class Token
     private $status;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="tokens")
+     * @ORM\OneToOne(targetEntity=User::class, inversedBy="tokens")
      */
     private $user;
 

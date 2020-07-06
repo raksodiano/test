@@ -49,6 +49,30 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
+    public function validateEmail($email)
+    {
+        $user = $this->findOneBy(['username' => $email]);
+        
+        return $user->getWallet()->getId();
+    }
+
+    public function validateToken($email, $key)
+    {
+        $user = $this->findOneBy(['username' => $email]);
+        
+        return $user->getToken()->getId();
+    }
+
+    public function validateWallet($email)
+    {
+        $user = $this->findOneBy(['username' => $email]);
+        
+        return [
+            'wallet_id' => $user->getWallet()->getId(),
+            'amount' => $user->getWallet()->getAmount(),
+        ];
+    }
+
     public function saveClient($names, $dni, $phone, $email)
     {
         $date = new \Datetime();
@@ -80,34 +104,5 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->manager->persist($new_wallet);
         $this->manager->flush();
 
-        }
-
-        // /**
-        //  * @return User[] Returns an array of User objects
-        //  */
-        /*
-          public function findByExampleField($value)
-          {
-          return $this->createQueryBuilder('u')
-          ->andWhere('u.exampleField = :val')
-          ->setParameter('val', $value)
-          ->orderBy('u.id', 'ASC')
-          ->setMaxResults(10)
-          ->getQuery()
-          ->getResult()
-        ;
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?User
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }
