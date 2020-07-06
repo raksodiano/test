@@ -38,7 +38,7 @@ class Profile
     private $dni;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="profiles")
+     * @ORM\OneToOne(targetEntity=User::class, inversedBy="profile")
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;

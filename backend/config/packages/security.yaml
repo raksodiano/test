@@ -53,7 +53,7 @@ security:
                 require_previous_session: false
 
         api:
-            pattern:   ^/api/v1
+            pattern:   ^/api
             stateless: true
             anonymous: false
             provider: api_user_provider
@@ -61,8 +61,17 @@ security:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
 
+        main:
+          pattern: ^/
+          form_login:
+              provider: api_user_provider
+              csrf_token_generator: security.csrf.token_manager
+          logout: true
+          anonymous: true
+
     access_control:
         - { path: ^/api/login_check, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/v1,       roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/recharge_wallet,       roles: IS_AUTHENTICATED_FULLY }

@@ -1,6 +1,10 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+app.swagger_ui:
+    path: /api/doc
+    methods: GET
+    defaults: { _controller: nelmio_api_doc.controller.swagger_ui }
 
 login_check:
   path: /api/login_check
@@ -10,4 +14,9 @@ login_check:
 register_client:
   path: /api/register_client
   controller: App\Controller\UserController::registerClientAction
+  methods: [POST]
+
+recharge_wallet:
+  path: /api/recharge_wallet
+  controller: App\Controller\WalletController::rechargeWalletAction
   methods: [POST]

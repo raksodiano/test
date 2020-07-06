@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Wallet;
+use App\Entity\Movement;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @method Wallet|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,37 +16,35 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class WalletRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $manager)
     {
         parent::__construct($registry, Wallet::class);
+        $this->manager = $manager;
     }
 
-    // /**
-    //  * @return Wallet[] Returns an array of Wallet objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function rechargeWallet($amount, $wallet_id)
     {
-        return $this->createQueryBuilder('w')
-            ->andWhere('w.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('w.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $date = new \Datetime();
+        $date = new \DateTime($date->format('Y-m-d H:i:s'));
 
-    /*
-    public function findOneBySomeField($value): ?Wallet
-    {
-        return $this->createQueryBuilder('w')
-            ->andWhere('w.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $wallet = $this->find($wallet_id);
+        $wallet
+            ->setAmount($amount)
+            ->setUpdatedAt($date);
+
+        $user = $wallet->getUser();
+
+        $new_movement = new Movement;
+        $new_movement
+            ->setAmount($amount)
+            ->setType(true)
+            ->setCreatedAt($date)
+            ->setUser($user);
+
+        $this->manager->persist($new_movement);
+        $this->manager->flush();
+
     }
-    */
+
+
 }

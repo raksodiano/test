@@ -37,14 +37,14 @@ class User implements UserInterface
     private $password;
 
     /**
-     * @ORM\OneToMany(targetEntity=Profile::class, mappedBy="user")
+     * @ORM\OneToOne(targetEntity=Profile::class, mappedBy="user")
      */
-    private $profiles;
+    private $profile;
 
     /**
-     * @ORM\OneToMany(targetEntity=Wallet::class, mappedBy="user")
+     * @ORM\OneToOne(targetEntity=Wallet::class, mappedBy="user")
      */
-    private $wallets;
+    private $wallet;
 
     /**
      * @ORM\OneToMany(targetEntity=Movement::class, mappedBy="user")
@@ -53,8 +53,6 @@ class User implements UserInterface
 
     public function __construct()
     {
-        $this->profiles = new ArrayCollection();
-        $this->wallets = new ArrayCollection();
         $this->movements = new ArrayCollection();
     }
 
@@ -131,68 +129,41 @@ class User implements UserInterface
         // $this->plainPassword = null;
     }
 
-    /**
-     * @return Collection|Profile[]
-     */
-    public function getProfiles(): Collection
+    public function getProfile(): ?Profile
     {
-        return $this->profiles;
+        return $this->profile;
     }
 
-    public function addProfile(Profile $profile): self
+    public function setProfile(?Profile $profile): self
     {
-        if (!$this->profiles->contains($profile)) {
-            $this->profiles[] = $profile;
-            $profile->setUser($this);
+        $this->profile = $profile;
+
+        // set (or unset) the owning side of the relation if necessary
+        $newUser = null === $profile ? null : $this;
+        if ($profile->getUser() !== $newUser) {
+            $profile->setUser($newUser);
         }
 
         return $this;
     }
 
-    public function removeProfile(Profile $profile): self
+    public function getWallet(): ?Wallet
     {
-        if ($this->profiles->contains($profile)) {
-            $this->profiles->removeElement($profile);
-            // set the owning side to null (unless already changed)
-            if ($profile->getUser() === $this) {
-                $profile->setUser(null);
-            }
+        return $this->wallet;
+    }
+
+    public function setWallet(?Wallet $wallet): self
+    {
+        $this->wallet = $wallet;
+
+        // set (or unset) the owning side of the relation if necessary
+        $newUser = null === $wallet ? null : $this;
+        if ($wallet->getUser() !== $newUser) {
+            $wallet->setUser($newUser);
         }
 
         return $this;
     }
-
-    /**
-     * @return Collection|Wallet[]
-     */
-    public function getWallets(): Collection
-    {
-        return $this->wallets;
-    }
-
-    public function addWallet(Wallet $wallet): self
-    {
-        if (!$this->wallets->contains($wallet)) {
-            $this->wallets[] = $wallet;
-            $wallet->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeWallet(Wallet $wallet): self
-    {
-        if ($this->wallets->contains($wallet)) {
-            $this->wallets->removeElement($wallet);
-            // set the owning side to null (unless already changed)
-            if ($wallet->getUser() === $this) {
-                $wallet->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
     /**
      * @return Collection|Movement[]
      */

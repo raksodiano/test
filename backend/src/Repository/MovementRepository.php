@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Movement;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @method Movement|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,37 +15,43 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class MovementRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $manager)
     {
         parent::__construct($registry, Movement::class);
+        $this->manager = $manager;
     }
 
-    // /**
-    //  * @return Movement[] Returns an array of Movement objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function movements($amount, $wallet_id)
     {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('m.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $date = new \Datetime();
+        $date = new \DateTime($date->format('Y-m-d H:i:s'));
 
-    /*
-    public function findOneBySomeField($value): ?Movement
-    {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $new_user = new User;
+        $new_user
+            ->setUsername($email)
+            ->setPassword($this->passwordEncoder->encodePassword($new_user, $phone));
+
+        $new_profile = new Profile;
+        $new_profile
+            ->setNames($names)
+            ->setDni($dni)
+            ->setPhone($phone)
+            ->setEmail($email)
+            ->setCreatedAt($date)
+            ->setUser($new_user);
+
+        $new_wallet = new Wallet;
+        $new_wallet
+            ->setAmount(0)
+            ->setCreatedAt($date)
+            ->setUpdatedAt($date)
+            ->setUser($new_user);
+
+        $this->manager->persist($new_user);
+        $this->manager->persist($new_profile);
+        $this->manager->persist($new_wallet);
+        $this->manager->flush();
+
     }
-    */
+
 }

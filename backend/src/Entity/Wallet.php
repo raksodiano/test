@@ -23,7 +23,7 @@ class Wallet
     private $amount;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="wallets")
+     * @ORM\OneToOne(targetEntity=User::class, inversedBy="wallet")
      */
     private $user;
 
