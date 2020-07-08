@@ -39,7 +39,9 @@ export const login = (values) => (dispatch) => {
       const user = JSON.stringify(res.data);
       localStorage.setItem("user", user);
       const token = JSON.parse(user).token;
-      const email = getEmail(token).email;
+      const email = getEmail(token);
+      console.log("login", email);
+      
       dispatch(
         setUser({
           username: email.username,
@@ -154,10 +156,11 @@ export const closeSnackbars = (values) => {
 
 export const verify = () => (dispatch) => {
   const user = localStorage.getItem("user");
-
+  
   if (user) {
     const token = JSON.parse(user).token;
     const email = getEmail(token).email;
+    console.log("verify", email);
     dispatch(
       setUser({
         username: email.username,
