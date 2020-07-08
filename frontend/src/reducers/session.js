@@ -6,9 +6,13 @@ import {
   SIGN_OFF,
 } from "../constants/reducers";
 
-const setData = (state, node, payload) => (state = { ...state, node, ...payload });
+const setData = (state, node, payload) => (state = { ...state, node, payload });
 
 const initalState = {
+  payload: {
+    logout: false,
+    username: ''
+  },
   snackBars: {
     type: "success",
     message: "",

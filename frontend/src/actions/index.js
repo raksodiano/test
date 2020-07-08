@@ -6,8 +6,16 @@ import {
   USER_SESSION,
   SIGN_OFF,
 } from "../constants/reducers";
-import { LOGIN_URL, REGISTER_URL, HEADERS } from "../constants/urls";
-// import { getEmail } from "../helpers";
+import {
+  LOGIN_URL,
+  REGISTER_URL,
+  CHECK_BALANCE_URL,
+  RECHARGE_URL,
+  PAYMENT_URL,
+  CONFIRM_PAYMENT_URL,
+  HEADERS,
+} from "../constants/urls";
+import { getEmail } from "../helpers";
 
 const setUser = (payload) => ({
   type: USER_SESSION,
@@ -28,10 +36,13 @@ export const login = (values) => (dispatch) => {
     headers: HEADERS,
   })
     .then((res) => {
-      localStorage.setItem("user", JSON.stringify(res.data));
-
+      const user = JSON.stringify(res.data);
+      localStorage.setItem("user", user);
+      const token = JSON.parse(user).token;
+      const email = getEmail(token).email;
       dispatch(
         setUser({
+          username: email.username,
           logout: true,
         })
       );
@@ -53,6 +64,66 @@ export const register = (values, callback) => (dispatch) => {
     })
     .catch((err) => {
       dispatch(openSnackbars("error", "Usuario Existente"));
+    });
+};
+
+export const checkBalance = (values, callback) => (dispatch) => {
+  axios({
+    method: "post",
+    url: CHECK_BALANCE_URL,
+    data: { ...values },
+    headers: HEADERS,
+  })
+    .then((res) => {
+      callback();
+    })
+    .catch((err) => {
+      dispatch(openSnackbars("error", "no se ha podido traer la informacion"));
+    });
+};
+
+export const rechargeWallet = (values, callback) => (dispatch) => {
+  axios({
+    method: "post",
+    url: RECHARGE_URL,
+    data: { ...values },
+    headers: HEADERS,
+  })
+    .then((res) => {
+      callback();
+    })
+    .catch((err) => {
+      dispatch(openSnackbars("error", "no se ha podido traer la informacion"));
+    });
+};
+
+export const payment = (values, callback) => (dispatch) => {
+  axios({
+    method: "post",
+    url: PAYMENT_URL,
+    data: { ...values },
+    headers: HEADERS,
+  })
+    .then((res) => {
+      callback();
+    })
+    .catch((err) => {
+      dispatch(openSnackbars("error", "no se ha podido traer la informacion"));
+    });
+};
+
+export const confirmPayment = (values, callback) => (dispatch) => {
+  axios({
+    method: "post",
+    url: CONFIRM_PAYMENT_URL,
+    data: { ...values },
+    headers: HEADERS,
+  })
+    .then((res) => {
+      callback();
+    })
+    .catch((err) => {
+      dispatch(openSnackbars("error", "no se ha podido traer la informacion"));
     });
 };
 
@@ -83,9 +154,13 @@ export const closeSnackbars = (values) => {
 
 export const verify = () => (dispatch) => {
   const user = localStorage.getItem("user");
+
   if (user) {
+    const token = JSON.parse(user).token;
+    const email = getEmail(token).email;
     dispatch(
       setUser({
+        username: email.username,
         logout: true,
       })
     );

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import Button from "@material-ui/core/Button";
@@ -41,7 +41,7 @@ const styles1 = (theme) => ({
   },
   iconVariant: {
     opacity: 0.9,
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(y),
   },
   message: {
     display: "flex",
@@ -95,7 +95,7 @@ const styles2 = (theme) => ({
   },
 });
 
-class Snackbars extends React.Component {
+class Snackbars extends Component {
   handleClose = (event, reason) => {
     const { message, type, open } = this.props.snackBars;
     if (reason === "clickaway") {
@@ -135,7 +135,7 @@ Snackbars.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  snackBars: state.app.get("snackBars"),
+  snackBars: state.snackBars,
 });
 
 export default connect(mapStateToProps, { close: closeSnackbars })(

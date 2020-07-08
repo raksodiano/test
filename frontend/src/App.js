@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-// import Snackbars from './components/Snackbars';
 import { connect } from "react-redux";
+import styled from "styled-components";
 import HomeContainer from "./containers/HomeContainer";
 import SessionContainer from "./containers/SessionContainer";
 
@@ -13,18 +13,26 @@ class App extends Component {
   }
 
   render() {
+    console.log("app", this.props);
+    
     return (
-      <div>
-        {console.log(this.props.user)}
-        {!this.props.user.logout && <SessionContainer />}
-        {this.props.user.logout && <HomeContainer />}
-      </div>
+      <Container>
+        {!this.props.user.payload.logout && <SessionContainer />}
+        {this.props.user.payload.logout && <HomeContainer />}
+      </Container>
     );
   }
 }
 
+const Container = styled.div`
+  min-height: 98vh;
+  display: flex;
+  flex-direction: column;
+  background: aliceblue;
+`;
+
 const mapStateToProps = (state) => ({
-  user: { logout: state.session.logout },
+  user: { ...state.session },
 });
 
 export default connect(mapStateToProps, null)(App);
