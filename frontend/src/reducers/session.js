@@ -6,7 +6,7 @@ import {
   SIGN_OFF,
 } from "../constants/reducers";
 
-const setData = (state, node, values) => (state = { state, node, values });
+const setData = (state, node, payload) => (state = { ...state, node, ...payload });
 
 const initalState = {
   snackBars: {
@@ -16,7 +16,7 @@ const initalState = {
   },
 };
 
-const sessionReducer = (state = initalState, { type, payload }) => {
+const session = (state = initalState, { type, payload }) => {
 
   switch (type) {
     case OPEN_SNACKBARS: {
@@ -31,17 +31,14 @@ const sessionReducer = (state = initalState, { type, payload }) => {
       return setData(state, "sesionUser", payload);
     }
 
-    case SET_STATE: {
-      return state;
-    }
-
     case SIGN_OFF: {
       return initalState;
     }
 
+    case SET_STATE:
     default:
       return state;
   }
 };
 
-export default sessionReducer;
+export default session;

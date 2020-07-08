@@ -5,7 +5,6 @@ import HomeContainer from "./containers/HomeContainer";
 import SessionContainer from "./containers/SessionContainer";
 
 class App extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -16,15 +15,16 @@ class App extends Component {
   render() {
     return (
       <div>
-        {!this.props.user.email && <SessionContainer />}
-        {this.props.user.email && <HomeContainer />}
+        {console.log(this.props.user)}
+        {!this.props.user.logout && <SessionContainer />}
+        {this.props.user.logout && <HomeContainer />}
       </div>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
-  user: state,
+  user: { logout: state.session.logout },
 });
 
 export default connect(mapStateToProps, null)(App);

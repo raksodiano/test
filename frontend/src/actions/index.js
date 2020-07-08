@@ -7,7 +7,7 @@ import {
   SIGN_OFF,
 } from "../constants/reducers";
 import { LOGIN_URL, REGISTER_URL, HEADERS } from "../constants/urls";
-import { getEmail } from "../helpers";
+// import { getEmail } from "../helpers";
 
 const setUser = (payload) => ({
   type: USER_SESSION,
@@ -28,13 +28,10 @@ export const login = (values) => (dispatch) => {
     headers: HEADERS,
   })
     .then((res) => {
-      console.log(res.data.token);
-      
-      localStorage.setItem("user", res.data);
+      localStorage.setItem("user", JSON.stringify(res.data));
 
       dispatch(
         setUser({
-          ...res.data,
           logout: true,
         })
       );
@@ -86,12 +83,9 @@ export const closeSnackbars = (values) => {
 
 export const verify = () => (dispatch) => {
   const user = localStorage.getItem("user");
-  console.log("algo", getEmail);
-  
   if (user) {
     dispatch(
       setUser({
-        ...user,
         logout: true,
       })
     );
