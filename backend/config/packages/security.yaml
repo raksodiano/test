@@ -46,7 +46,7 @@ security:
             pattern:  ^/api/login
             stateless: true
             anonymous: true
-            form_login:
+            json_login:
                 check_path:               /api/login_check
                 success_handler:          lexik_jwt_authentication.handler.authentication_success
                 failure_handler:          lexik_jwt_authentication.handler.authentication_failure
@@ -55,7 +55,7 @@ security:
         api:
             pattern:   ^/api
             stateless: true
-            anonymous: false
+            anonymous: true
             provider: api_user_provider
             guard:
                 authenticators:
@@ -74,4 +74,3 @@ security:
         - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/v1,       roles: IS_AUTHENTICATED_FULLY }
-        - { path: ^/api/recharge_wallet,       roles: IS_AUTHENTICATED_FULLY }

@@ -10,6 +10,7 @@
         "lcobucci/jwt": "^3.3",
         "lexik/jwt-authentication-bundle": "^2.8",
         "nelmio/api-doc-bundle": "^3.6",
+        "nelmio/cors-bundle": "^2.0",
         "sensio/framework-extra-bundle": "^5.5",
         "symfony/console": "4.4.*",
         "symfony/dotenv": "4.4.*",

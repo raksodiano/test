@@ -9,27 +9,27 @@ login_check:
   methods: [POST]
 
 register_client:
-  path: /api/register_client
+  path: /api/register
   controller: App\Controller\UserController::registerClientAction
   methods: [POST]
 
 recharge_wallet:
-  path: /api/recharge_wallet
+  path: /api/v1/recharge_wallet
   controller: App\Controller\WalletController::rechargeWalletAction
   methods: [POST]
 
 payment_wallet:
-  path: /api/payment
+  path: /api/v1/payment
   controller: App\Controller\WalletController::paymentAction
   methods: [POST]
 
 confirm_payment_wallet:
-  path: /api/confirm_payment
+  path: /api/v1/confirm_payment
   controller: App\Controller\WalletController::confirmPaymentAction
   methods: [POST]
 
 check_balance_wallet:
-  path: /api/check_balance
+  path: /api/v1/check_balance
   controller: App\Controller\WalletController::checkBalanceAction
   methods: [POST]
   
